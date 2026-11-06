@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Amigo Invisible de las Primas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Playfair+Display:ital,wght@0,600;1,500&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:#FBE7EC;font-family:'DM Sans',system-ui,sans-serif;color:#5A1630;-webkit-tap-highlight-color:transparent}
+body.red{background:#B3122E}
+.sky{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.flake{position:absolute;top:-10px;border-radius:50%;background:#F4B8C8;opacity:.8;animation:fall linear infinite}
+.flake.g{background:#E9C77B}
+@keyframes fall{to{transform:translateY(110vh)}}
+@media (prefers-reduced-motion:reduce){.flake,.gift{animation:none}}
+main{position:relative;z-index:1;max-width:420px;margin:0 auto;min-height:100vh;padding:48px 22px 32px;display:flex;flex-direction:column}
+.screen{display:none;flex-direction:column;gap:22px;flex:1}
+.screen.on{display:flex}
+.center{text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px}
+.kicker{margin:6px 0 0;font-size:12px;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:#A3204F}
+.script{font-family:'Pinyon Script',cursive;font-weight:400;color:#B3122E;margin:0;line-height:1.05}
+h1.script{font-size:58px}
+.serif{font-family:'Playfair Display',serif}
+.sub{margin:0;font-style:italic;font-size:20px}
+.chips{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.chip{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;background:#FFF8F3;border:1px solid #F2C6D2;font-size:13px;font-weight:500}
+.card{background:#FFF8F3;border-radius:28px;padding:22px 18px 20px;display:flex;flex-direction:column;gap:14px;box-shadow:0 10px 30px rgba(179,18,46,.10)}
+.card h2{margin:0;font-family:'Playfair Display',serif;font-weight:600;font-size:22px;text-align:center}
+.muted{margin:0;font-size:13px;text-align:center;color:#7A3A52;line-height:1.5}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.name{min-height:52px;border-radius:16px;border:2px solid #F2C6D2;background:#fff;color:#5A1630;font:500 16px 'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;padding:6px}
+.name:hover{border-color:#C8336A}
+.name.sel{background:#C8336A;border-color:#C8336A;color:#fff;font-weight:700}
+.name.lock{border-style:dashed;border-color:#E6BFCB;background:#FBEFF2;color:#8E5A6C;font-size:15px}
+.name.lock.sel{background:#8E5A6C;border-color:#8E5A6C;border-style:solid;color:#fff}
+.grow{flex:1}
+.btn{min-height:56px;border-radius:999px;border:none;background:#B3122E;color:#fff;font:700 17px 'DM Sans',sans-serif;letter-spacing:.02em;box-shadow:0 8px 20px rgba(179,18,46,.25);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;padding:0 20px;width:100%}
+.btn[aria-disabled="true"]{background:#D99AAE;box-shadow:none;cursor:default}
+.btn.ghost{background:transparent;border:2px solid #FBE7EC;box-shadow:none}
+.back{background:none;border:none;color:#A3204F;font:500 15px 'DM Sans',sans-serif;display:flex;align-items:center;gap:6px;min-height:44px;padding:0;cursor:pointer;align-self:flex-start}
+.note{display:flex;gap:10px;align-items:flex-start;background:#FBEFF2;border-radius:16px;padding:12px 14px;font-size:13px;line-height:1.45;color:#7A3A52;margin:0}
+.field{display:flex;flex-direction:column;align-items:center;gap:8px;width:100%}
+.field label{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#A3204F}
+.pin{width:220px;height:66px;border-radius:18px;border:2px solid #F2C6D2;background:#fff;color:#5A1630;text-align:center;font:700 30px 'DM Sans',sans-serif;letter-spacing:.6em;padding-left:.6em;-webkit-text-security:disc;outline:none}
+.pin:focus{border-color:#B3122E;box-shadow:0 0 0 4px #F7D3DD}
+.err{margin:0;min-height:20px;font-size:14px;font-weight:500;color:#B3122E;text-align:center}
+.reveal-name{font-size:68px;text-align:center}
+.line{width:60px;height:2px;background:#E9C77B}
+.info{background:#FBEFF2;border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:4px}
+.info span:first-child{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#A3204F}
+.info span:last-child{font-family:'Playfair Display',serif;font-weight:600;font-size:20px}
+.pop{animation:pop .6s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+.white{color:#FBE7EC}
+.spin{width:22px;height:22px;border-radius:50%;border:3px solid rgba(255,255,255,.4);border-top-color:#fff;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="sky" id="sky" aria-hidden="true"></div>
+<main>
+
+<!-- 1 · Elige tu nombre -->
+<section class="screen on" id="s1">
+<div class="center">
+<svg aria-hidden="true" width="72" height="44" viewBox="0 0 72 44" fill="none" stroke="#C8336A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M36 22 C26 6 8 4 8 16 C8 28 26 26 36 22Z"/><path d="M36 22 C46 6 64 4 64 16 C64 28 46 26 36 22Z"/><path d="M33 24 L24 42"/><path d="M39 24 L48 42"/><circle cx="36" cy="22" r="4" fill="#C8336A"/></svg>
+<p class="kicker">Navidad 2026</p>
+<h1 class="script">Amigo Invisible</h1>
+<p class="sub serif">de las primas</p>
+</div>
+<div class="chips">
+<span class="chip"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C8336A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M12 8v13M3 12h18"/></svg>De 20 a 30 €</span>
+<span class="chip"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C8336A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>19 de diciembre</span>
+</div>
+<div class="card">
+<h2>¿Quién eres?</h2>
+<p class="muted">Toca tu nombre. Los que tienen candado ya han creado su PIN.</p>
+<div class="grid" id="names"><p class="muted" style="grid-column:1/-1">Cargando…</p></div>
+<p class="err" id="err1"></p>
+</div>
+<div class="grow"></div>
+<button class="btn" id="go" aria-disabled="true">Elige tu nombre</button>
+</section>
+
+<!-- 2 · PIN -->
+<section class="screen" id="s2">
+<button class="back" id="back"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg><span id="notme">No soy yo</span></button>
+<div class="center">
+<p class="script" style="font-size:48px" id="hola">Hola</p>
+<h2 class="serif" style="margin:0;font-weight:600;font-size:26px" id="pinTitle">Crea tu PIN secreto</h2>
+<p class="muted" style="max-width:300px" id="pinText">Con él podrás volver a ver tu amigo invisible. Así nadie más puede abrir tu nombre.</p>
+</div>
+<form class="card" id="pinForm" style="align-items:center" novalidate>
+<div class="field">
+<label for="pin1" id="pin1Label">4 números</label>
+<input class="pin" id="pin1" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off">
+</div>
+<div class="field" id="pin2Wrap">
+<label for="pin2">Repítelo</label>
+<input class="pin" id="pin2" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off">
+</div>
+<p class="err" id="err2" role="alert"></p>
+<p class="note" id="pinNote"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A3204F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span>Apúntalo en algún sitio. Si lo olvidas, no podrás volver a ver el resultado.</span></p>
+<button class="btn" id="openBtn" type="submit"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M12 8v13M3 12h18M12 8c-2-4-6-4-6-1s6 1 6 1 6 2 6-1-4-3-6 1"/></svg><span>Descubrir a quién me toca</span></button>
+</form>
+<div class="grow"></div>
+</section>
+
+<!-- 3 · Resultado -->
+<section class="screen" id="s3">
+<div class="center" style="gap:14px">
+<svg aria-hidden="true" width="90" height="90" viewBox="0 0 120 120" fill="none"><rect x="18" y="52" width="84" height="56" rx="8" fill="#FBE7EC"/><rect x="12" y="38" width="96" height="20" rx="6" fill="#FFF8F3"/><rect x="53" y="38" width="14" height="70" fill="#E9C77B"/><path d="M60 38 C48 18 28 18 32 30 C36 40 60 38 60 38Z" stroke="#E9C77B" stroke-width="5" stroke-linejoin="round"/><path d="M60 38 C72 18 92 18 88 30 C84 40 60 38 60 38Z" stroke="#E9C77B" stroke-width="5" stroke-linejoin="round"/></svg>
+<p class="kicker white" id="tocado">Te ha tocado…</p>
+</div>
+<div class="card pop" id="resCard" style="align-items:center;padding:30px 22px 26px;gap:18px">
+<p class="script reveal-name" id="who"></p>
+<div class="line"></div>
+<div class="grid" style="width:100%">
+<div class="info"><span>Presupuesto</span><span>20 – 30 €</span></div>
+<div class="info"><span>Intercambio</span><span>19 dic</span></div>
+</div>
+<p class="serif" style="margin:0;font-style:italic;font-size:17px;text-align:center">Shhh… que no se entere nadie.</p>
+</div>
+<div class="grow"></div>
+<button class="btn ghost" id="hide"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18"/><path d="M10.6 5.1A10 10 0 0 1 12 5c6 0 10 7 10 7a17 17 0 0 1-3.2 3.9M6.6 6.6C3.8 8.4 2 12 2 12s4 7 10 7a9.6 9.6 0 0 0 5.4-1.6"/></svg>Ocultar y salir</button>
+</section>
+
+</main>
+<script>
+/* ===== CONFIGURA AQUÍ (Supabase > Project Settings > API) ===== */
+var SUPABASE_URL = "https://wvbuhgrdvdoxuutfynkf.supabase.co";
+var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind2YnVoZ3JkdmRveHV1dGZ5bmtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM5OTExMjgsImV4cCI6MjEwOTU2NzEyOH0.pr5tCL8K0P623vgznW1MFa5120MHRcLVBJXiZQlA-GQ";
+/* ============================================================== */
+
+var state = { list: [], picked: null };
+
+function rpc(fn, body) {
+  var headers = { "apikey": SUPABASE_ANON_KEY, "Content-Type": "application/json" };
+  /* Clave antigua "anon" (empieza por eyJ): también va en Authorization.
+     Clave nueva "sb_publishable_…": basta con apikey. */
+  if (SUPABASE_ANON_KEY.indexOf("eyJ") === 0) headers["Authorization"] = "Bearer " + SUPABASE_ANON_KEY;
+  return fetch(SUPABASE_URL.replace(/\/+$/, "") + "/rest/v1/rpc/" + fn, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(body || {})
+  }).then(function (r) {
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    return r.json();
+  });
+}
+
+function $(id) { return document.getElementById(id); }
+
+function show(id) {
+  ["s1", "s2", "s3"].forEach(function (s) { $(s).classList.toggle("on", s === id); });
+  document.body.classList.toggle("red", id === "s3");
+  window.scrollTo(0, 0);
+}
+
+function lockIcon() {
+  var ns = "http://www.w3.org/2000/svg";
+  var svg = document.createElementNS(ns, "svg");
+  svg.setAttribute("width", "14"); svg.setAttribute("height", "14"); svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("fill", "none"); svg.setAttribute("stroke", "currentColor"); svg.setAttribute("stroke-width", "2.2");
+  svg.setAttribute("stroke-linecap", "round"); svg.setAttribute("stroke-linejoin", "round"); svg.setAttribute("aria-hidden", "true");
+  var r = document.createElementNS(ns, "rect");
+  r.setAttribute("x", "5"); r.setAttribute("y", "11"); r.setAttribute("width", "14"); r.setAttribute("height", "10"); r.setAttribute("rx", "2");
+  var p = document.createElementNS(ns, "path"); p.setAttribute("d", "M8 11V8a4 4 0 0 1 8 0v3");
+  svg.appendChild(r); svg.appendChild(p);
+  return svg;
+}
+
+function renderNames() {
+  var g = $("names"); g.textContent = "";
+  state.list.forEach(function (it) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "name" + (it.reclamado ? " lock" : "") + (state.picked === it.nombre ? " sel" : "");
+    if (it.reclamado) b.appendChild(lockIcon());
+    b.appendChild(document.createTextNode(it.nombre));
+    b.setAttribute("aria-pressed", state.picked === it.nombre ? "true" : "false");
+    b.addEventListener("click", function () { state.picked = it.nombre; renderNames(); });
+    g.appendChild(b);
+  });
+  var go = $("go");
+  if (state.picked) { go.textContent = "Soy " + state.picked + ", continuar"; go.setAttribute("aria-disabled", "false"); }
+  else { go.textContent = "Elige tu nombre"; go.setAttribute("aria-disabled", "true"); }
+}
+
+function loadNames() {
+  $("err1").textContent = "";
+  rpc("estado").then(function (rows) {
+    state.list = rows;
+    renderNames();
+  }).catch(function () {
+    $("names").textContent = "";
+    $("err1").textContent = "No se pudo cargar la lista. Revisa tu conexión y recarga la página.";
+  });
+}
+
+function current() {
+  for (var i = 0; i < state.list.length; i++) if (state.list[i].nombre === state.picked) return state.list[i];
+  return null;
+}
+
+$("go").addEventListener("click", function () {
+  if (!state.picked) return;
+  var it = current(), nuevo = !(it && it.reclamado);
+  $("hola").textContent = "Hola, " + state.picked;
+  $("notme").textContent = "No soy " + state.picked;
+  $("pinTitle").textContent = nuevo ? "Crea tu PIN secreto" : "Escribe tu PIN";
+  $("pinText").textContent = nuevo
+    ? "Con él podrás volver a ver tu amigo invisible. Así nadie más puede abrir tu nombre."
+    : "Ya creaste tu PIN. Escríbelo para volver a ver a quién te ha tocado.";
+  $("pin1Label").textContent = nuevo ? "4 números" : "Tu PIN";
+  $("pin2Wrap").style.display = nuevo ? "" : "none";
+  $("pinNote").style.display = nuevo ? "" : "none";
+  $("pin1").value = ""; $("pin2").value = ""; $("err2").textContent = "";
+  show("s2");
+  setTimeout(function () { $("pin1").focus(); }, 50);
+});
+
+$("back").addEventListener("click", function () { show("s1"); loadNames(); });
+
+["pin1", "pin2"].forEach(function (id) {
+  $(id).addEventListener("input", function () {
+    this.value = this.value.replace(/\D/g, "").slice(0, 4);
+    $("err2").textContent = "";
+  });
+});
+
+var busy = false;
+$("pinForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+  if (busy) return;
+  var it = current(), nuevo = !(it && it.reclamado);
+  var p1 = $("pin1").value, p2 = $("pin2").value;
+  if (!/^\d{4}$/.test(p1)) { $("err2").textContent = "El PIN tiene que tener 4 números."; return; }
+  if (nuevo && p1 !== p2) { $("err2").textContent = "Los dos PIN no coinciden."; return; }
+
+  busy = true;
+  var btn = $("openBtn"), label = btn.querySelector("span");
+  label.textContent = "Abriendo…";
+  rpc("abrir", { p_nombre: state.picked, p_pin: p1 }).then(function (res) {
+    if (res && res.ok) {
+      $("tocado").textContent = state.picked + ", te ha tocado…";
+      $("who").textContent = res.destino;
+      var c = $("resCard"); c.classList.remove("pop"); void c.offsetWidth; c.classList.add("pop");
+      $("pin1").value = ""; $("pin2").value = "";
+      show("s3");
+      return;
+    }
+    var err = res && res.error;
+    if (err === "PIN_INCORRECTO") {
+      $("err2").textContent = "PIN incorrecto." + (res.quedan > 0 ? " Te quedan " + res.quedan + " intentos." : "");
+    } else if (err === "BLOQUEADO") {
+      $("err2").textContent = "Este nombre está bloqueado por demasiados intentos. Avisa a Celia.";
+    } else {
+      $("err2").textContent = "Algo ha fallado. Inténtalo otra vez.";
+    }
+    $("pin1").value = "";
+  }).catch(function () {
+    $("err2").textContent = "Sin conexión. Inténtalo otra vez.";
+  }).then(function () {
+    busy = false; label.textContent = "Descubrir a quién me toca";
+  });
+});
+
+$("hide").addEventListener("click", function () {
+  $("who").textContent = "";
+  state.picked = null;
+  show("s1");
+  loadNames();
+});
+
+(function () {
+  var sky = $("sky");
+  for (var i = 0; i < 26; i++) {
+    var f = document.createElement("span");
+    f.className = "flake" + (i % 3 === 0 ? " g" : "");
+    var s = 2 + Math.random() * 4;
+    f.style.width = f.style.height = s + "px";
+    f.style.left = (Math.random() * 100) + "%";
+    f.style.animationDuration = (8 + Math.random() * 10) + "s";
+    f.style.animationDelay = (-Math.random() * 18) + "s";
+    sky.appendChild(f);
+  }
+})();
+
+loadNames();
+</script>
+</body>
+</html>
